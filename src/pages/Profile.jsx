@@ -1,70 +1,147 @@
-import React from "react";
-import avatarImg from "../assets/avatar.jpg";
+import React, { useState, useEffect } from "react";
+import api from "../api/config";
+import EditProfile from "../components/EditProfile";
 
-export default function Profile({ setCurrentPage }) {
-  const user = {
-    username: "Akash",
-    email: "akash004@gmail.com",
-    joinDate: "2023-01-15",
-    bio: "normal guy who loves coding and community building.",
-    posts: 24,
-    comments: 156,
-    likes: 40,
-    avatar: avatarImg,
+export default function Profile() {
+  const [user, setUser] = useState(null);
+
+  const [editing, setEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  useEffect(() => {
+    // Listen for user changes in localStorage
+    const handleStorageChange = () => {
+      fetchProfile();
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      setLoading(true);
+      // Get current user from localStorage to ensure we have the latest user
+      const currentUser = localStorage.getItem('user');
+      if (!currentUser) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+      
+      const userData = JSON.parse(currentUser);
+      const userId = userData._id || userData.id;
+      
+      if (!userId) {
+        // If no user ID, use localStorage data
+        setUser({
+          ...userData,
+          joinDate: new Date(userData.createdAt).toLocaleDateString() || "2023-01-15"
+        });
+        setLoading(false);
+        return;
+      }
+      
+      const response = await api.get(`/api/users/profile?userId=${userId}`);
+      if (response.data) {
+        setUser({
+          ...response.data,
+          joinDate: new Date(response.data.createdAt).toLocaleDateString() || "2023-01-15"
+        });
+        // Update localStorage with fresh user data
+        localStorage.setItem('user', JSON.stringify(response.data));
+        // Dispatch custom event to update header
+        window.dispatchEvent(new CustomEvent('profileUpdated', { detail: response.data }));
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+      // If API fails, try to get user from localStorage
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const userData = JSON.parse(storedUser);
+        setUser({
+          ...userData,
+          joinDate: new Date(userData.createdAt).toLocaleDateString() || "2023-01-15"
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const userPosts = [
-    { id: 1, title: "React Hooks Tutorial", date: "2024-12-01", likes: 45 },
-    { id: 2, title: "Web Performance Tips", date: "2024-11-25", likes: 32 },
-    { id: 3, title: "CSS Flexbox Guide", date: "2024-11-15", likes: 28 },
-  ];
+  if (loading) {
+    return (
+      <main className="flex-1 p-4 lg:p-6 max-w-4xl mx-auto">
+        <div className="bg-white rounded-lg shadow-md p-4 lg:p-6 mb-8">
+          <p className="text-gray-900">Loading profile...</p>
+        </div>
+      </main>
+    );
+  }
 
   return (
-    <main className="flex-1 p-6 max-w-4xl">
-      {/* Profile Header */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8 animate-fade-in animate-slide-in"> 
-        <div className="flex items-start justify-between mb-6">
-          <div className="flex items-center space-x-6">
-            <img
-              src={user.avatar}
-              alt="Profile avatar"
-              className="w-24 h-24 rounded-full object-cover ring-4 ring-transparent-100 shadow-md"
-            />
-            <div>
-              <h1 className="text-4xl font-bold text-gray-800 mb-2">{user.username}</h1>
-              <p className="text-white-600 font-medium mb-2">{user.email}</p>
-              <p className="text-gray-700 text-lg max-w-md mb-3">{user.bio}</p>
-              <p className="text-gray-600 text-sm">Joined {user.joinDate}</p>
+    <main className="flex-1 p-4 lg:p-6 max-w-4xl mx-auto">
+      <div className="bg-white rounded-lg shadow-md p-4 lg:p-6 mb-8">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-6 space-y-4 lg:space-y-0">
+
+          {/* Profile Info */}
+          <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
+            {user?.avatar ? (
+              <img
+                src={user.avatar}
+                alt="Profile avatar"
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover shadow-md flex-shrink-0"
+              />
+            ) : (
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gray-300 flex items-center justify-center shadow-md flex-shrink-0">
+                <span className="text-xl sm:text-2xl text-gray-600">{user?.username?.charAt(0)?.toUpperCase() || '?'}</span>
+              </div>
+            )}
+
+            <div className="text-center sm:text-left flex-1">
+              {!editing ? (
+                <>
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-2">
+                    {user?.username || user?.name || 'User'}
+                  </h1>
+
+                  <p className="text-gray-600 font-medium mb-2">{user?.email}</p>
+
+                  <p className="text-gray-700 text-base lg:text-lg max-w-md mb-2">{user?.bio || 'No bio available'}</p>
+
+                  <p className="text-gray-600 text-sm">
+                    Joined {user?.joinDate}
+                  </p>
+                </>
+              ) : (
+                <EditProfile
+                  user={user}
+                  setUser={setUser}
+                  onSaved={(updatedUser) => {
+                    setUser(updatedUser);
+                    setEditing(false);
+                    fetchProfile();
+                    // Dispatch custom event to update header
+                    window.dispatchEvent(new CustomEvent('profileUpdated', { detail: updatedUser }));
+                  }}
+                  onCancel={() => setEditing(false)}
+                />
+              )}
             </div>
           </div>
-            <button className="px-6 py-3 bg-transparent text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium">
+
+          {/* Edit Button */}
+          {!editing && (
+            <button
+              onClick={() => setEditing(true)}
+              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md transition self-center lg:self-start"
+            >
               Edit Profile
             </button>
-        </div>
-      </div>
-
-     
-
-      {/* Recent Posts */}
-      <div className="card animate-fade-in animate-slide-in">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800 flex items-center space-x-2">
-          <span></span>
-          <span>Recent Posts</span>
-        </h2>
-        <div className="space-y-4">
-          {userPosts.map((post) => (
-            <button
-              key={post.id} 
-              onClick={() => setCurrentPage('home')}
-              className="w-full text-left p-4 bg-gradient-to-r from-gray-50 to-transparent rounded-lg border-l-4 border-blue-500 hover:shadow-lg cursor-pointer transition duration-300 group animate-slide-in"
-            >
-              <h3 className="font-bold text-gray-800 group-hover:text-blue-600 transition duration-300 text-lg">{post.title}</h3>
-              <div className="flex justify-between text-sm text-gray-600 mt-2">
-                <span>{post.date}</span>
-                <span className="font-semibold"> {post.likes} likes</span>
-              </div>
-            </button>
-          ))}
+          )}
         </div>
       </div>
     </main>

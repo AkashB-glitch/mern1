@@ -8,6 +8,18 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Set theme early to avoid flash: read saved preference before React mounts -->
+    <script>
+      (function(){
+        try {
+          var t = localStorage.getItem('theme');
+          if(t === 'dark') document.documentElement.classList.add('dark');
+          else if(!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+          }
+        } catch(e) { /* ignore */ }
+      })();
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

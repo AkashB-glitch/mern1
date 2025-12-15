@@ -1,34 +1,78 @@
-import React from "react";
+import React from 'react';
 
-export default function PostCard({ post }) {
+export default function PostCard({ post, onClick, onDelete, isAdmin }) {
   return (
-    <div className="card animate-fade-in border-l-4 border-blue-500 hover:shadow-xl cursor-pointer group mb-4 transform transition duration-300 hover:-translate-y-1">
-      <div className="flex justify-between items-start mb-3">
-        <div>
-          <h3 className="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition duration-200">
-            {post.title}
-          </h3>
-          <p className="text-gray-500 text-sm mt-1">👤 {post.author}</p>
-        </div>
-        <span className="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-medium">
-          {post.date}
-        </span>
-      </div>
-      <p className="text-gray-700 mb-4 line-clamp-2">{post.content}</p>
-      <div className="flex justify-between items-center pt-4 border-t border-gray-200">
-        <div className="flex space-x-6 text-sm text-gray-600">
-          <button className="hover:text-blue-600 transition flex items-center space-x-1 group">
-            <span>👍</span>
-            <span className="group-hover:font-bold">{post.likes}</span>
-          </button>
-          <button className="hover:text-blue-600 transition flex items-center space-x-1 group">
-            <span>💬</span>
-            <span className="group-hover:font-bold">{post.comments?.length || 0}</span>
-          </button>
-        </div>
-        <button className="text-gray-400 hover:text-red-500 transition text-lg">
-          ♡
+    <div 
+      onClick={onClick}
+      className="flex gap-3 sm:gap-4 p-3 sm:p-4 hover:bg-gray-50 transition cursor-pointer border-b border-gray-100"
+    >
+      {/* Vote Section - Hidden on mobile */}
+      <div className="hidden sm:flex flex-col items-center gap-1 pt-1">
+        <button className="text-gray-400 hover:text-orange-500 transition text-lg p-1">
+          ▲
         </button>
+        <span className="font-semibold text-gray-900 text-sm">{post.likes || 0}</span>
+        <button className="text-gray-400 hover:text-blue-500 transition text-lg p-1">
+          ▼
+        </button>
+        {isAdmin && (
+          <button 
+            onClick={onDelete}
+            className="text-red-500 hover:text-red-700 transition text-sm p-1 mt-2"
+            title="Delete Post"
+          >
+            Delete
+          </button>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-2 flex-wrap">
+          <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+            post.tagColor === 'yellow' ? 'bg-yellow-100 text-yellow-800' :
+            post.tagColor === 'blue' ? 'bg-blue-100 text-blue-800' :
+            post.tagColor === 'green' ? 'bg-green-100 text-green-800' :
+            'bg-purple-100 text-purple-800'
+          }`}>
+            {post.tag === 'Question' ? '?' : '•'} {post.tag || 'Discussion'}
+          </span>
+          <span className="text-gray-900 text-sm font-medium">{post.author || 'Anonymous'}</span>
+          <span className="hidden sm:inline text-gray-600 text-xs">{post.username || '@user'}</span>
+          <span className="text-gray-500 text-xs">• {post.timeAgo || new Date(post.createdAt).toLocaleDateString()}</span>
+        </div>
+        
+        <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-2 hover:text-teal-600 transition line-clamp-2">
+          {post.title}
+        </h3>
+        
+        <p className="text-gray-700 text-sm mb-3 line-clamp-2 hidden sm:block">
+          {post.content?.substring(0, 150)}...
+        </p>
+        
+        <div className="flex items-center gap-3 sm:gap-4 text-xs text-gray-600">
+          <span className="flex items-center gap-1">
+            💬 {post.comments || 0}
+          </span>
+          <span className="flex items-center gap-1">
+            👁️ {post.views || 0}
+          </span>
+          {/* Mobile vote buttons */}
+          <div className="flex sm:hidden items-center gap-2 ml-auto">
+            <button className="text-gray-400 hover:text-orange-500 transition p-1">
+              ▲ {post.likes || 0}
+            </button>
+            {isAdmin && (
+              <button 
+                onClick={onDelete}
+                className="text-red-500 hover:text-red-700 transition p-1 text-xs"
+                title="Delete Post"
+              >
+                Delete
+              </button>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
