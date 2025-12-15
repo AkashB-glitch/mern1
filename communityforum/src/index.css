@@ -5,14 +5,124 @@
 
 
 * {
-  margin: 50;
-  padding: 50;
+  
+  
 box-sizing: content-box;;
 }
 body {
   background: linear-gradient(270deg,grey);
   background-size: 600% 600%;
   animation: gradientMove 12s ease infinite;
+}
+
+/* Dark body background when `.dark` is present on <html> */
+.dark body {
+  background: #0f172a; /* slate-900 */
+  background-image: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  background-size: 400% 400%;
+  animation: gradientMove 20s ease infinite;
+  color: #f1f5f9;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Global overrides for common Tailwind utility classes when dark mode is active. */
+.dark .bg-white {
+  background-color: #1e293b !important; /* slate-800 */
+  border: 1px solid #334155 !important; /* slate-700 */
+}
+.dark .bg-gray-50 {
+  background-color: #0f172a !important; /* slate-900 */
+}
+.dark .bg-gray-100 {
+  background-color: #1e293b !important; /* slate-800 */
+}
+.dark .bg-gray-200 {
+  background-color: #334155 !important; /* slate-700 */
+}
+.dark .text-gray-900,
+.dark .text-gray-700,
+.dark .text-gray-800 {
+  color: #f1f5f9 !important; /* slate-100 */
+}
+.dark .text-gray-600 {
+  color: #cbd5e1 !important; /* slate-300 */
+}
+.dark .text-gray-500,
+.dark .text-gray-400,
+.dark .text-gray-300 {
+  color: #94a3b8 !important; /* slate-400 */
+}
+.dark .border-gray-200 {
+  border-color: #334155 !important; /* slate-700 */
+}
+.dark .border-gray-100 {
+  border-color: #475569 !important; /* slate-600 */
+}
+.dark .nav-btn {
+  background-color: #334155 !important; /* slate-700 */
+  border-color: #475569 !important; /* slate-600 */
+  color: #f1f5f9 !important; /* slate-100 */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+}
+.dark .nav-btn:hover {
+  background-color: #475569 !important; /* slate-600 */
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
+}
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: #334155 !important; /* slate-700 */
+  color: #f1f5f9 !important; /* slate-100 */
+  border-color: #475569 !important; /* slate-600 */
+}
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  background-color: #475569 !important; /* slate-600 */
+  border-color: #06b6d4 !important; /* cyan-500 */
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1) !important;
+}
+.dark .card {
+  background-color: #1e293b !important; /* slate-800 */
+  color: #f1f5f9 !important; /* slate-100 */
+  border: 1px solid #334155 !important; /* slate-700 */
+}
+
+.dark .card-hover,
+.dark .rounded-lg,
+.dark .rounded-xl {
+  background-color: #1e293b !important; /* slate-800 */
+  color: #f1f5f9 !important; /* slate-100 */
+  border: 1px solid #334155 !important; /* slate-700 */
+}
+
+/* Accent colors in dark mode */
+.dark a { color: #67e8f9 !important; } /* cyan-300 */
+.dark .text-teal-500 { color: #2dd4bf !important; } /* teal-400 */
+.dark .bg-teal-500 { 
+  background: linear-gradient(135deg, #0891b2, #06b6d4) !important; /* cyan gradient */
+  box-shadow: 0 4px 14px 0 rgba(6, 182, 212, 0.3) !important;
+}
+.dark .bg-teal-500:hover { 
+  background: linear-gradient(135deg, #0e7490, #0891b2) !important;
+  box-shadow: 0 6px 20px 0 rgba(6, 182, 212, 0.4) !important;
+}
+.dark .bg-red-500 {
+  background: linear-gradient(135deg, #dc2626, #ef4444) !important;
+  box-shadow: 0 4px 14px 0 rgba(239, 68, 68, 0.3) !important;
+}
+.dark .bg-red-500:hover {
+  background: linear-gradient(135deg, #b91c1c, #dc2626) !important;
+  box-shadow: 0 6px 20px 0 rgba(239, 68, 68, 0.4) !important;
+}
+.dark .bg-blue-500 {
+  background: linear-gradient(135deg, #3b82f6, #6366f1) !important;
+  box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.3) !important;
+}
+.dark .bg-blue-500:hover {
+  background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+  box-shadow: 0 6px 20px 0 rgba(59, 130, 246, 0.4) !important;
 }
 
 @keyframes gradientMove {
@@ -70,6 +180,10 @@ a:hover {
 
 
 @layer components {
+  .card {
+    @apply bg-white p-8 rounded-xl shadow-2xl border;
+  }
+  
   .btn-primary {
     @apply px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition duration-300 shadow-md hover:shadow-lg font-medium;
   }
@@ -158,13 +272,21 @@ button {
   font-size: 1rem;
   font-weight: 500;
   font-family: inherit;
-  background-color: rgba(255, 255, 255, 0.1);
-   backdrop-filter: blur(4px);
-  color: rgb(91, 11, 182);
   cursor: pointer;
-  transition: box-shadow 0.18s ease, transform 0.12s ease;
-  border: grey;
-  box-shadow: grey;
+  transition: all 0.2s ease;
+}
+
+.dark button {
+  background-color: #334155;
+  color: #f1f5f9;
+  border: 1px solid #475569;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dark button:hover {
+  background-color: #475569;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 button:hover {
@@ -186,5 +308,69 @@ button:focus-visible {
   }
   button {
     background-color: #f9f9f9;
+    color: #374151;
+    border: 1px solid #d1d5db;
+  }
+}
+
+/* Dark theme specific improvements */
+.dark .shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dark .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dark .hover\:bg-gray-50:hover {
+  background-color: #334155 !important;
+}
+
+.dark .hover\:bg-gray-100:hover {
+  background-color: #475569 !important;
+}
+.puff-in-tl {
+	-webkit-animation: puff-in-tl 0.7s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
+	        animation: puff-in-tl 0.7s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
+}
+
+@-webkit-keyframes puff-in-tl {
+  0% {
+    -webkit-transform: scale(2);
+      transform: scale(2);
+    -webkit-transform-origin: 0% 0%;
+      transform-origin: 0% 0%;
+    -webkit-filter: blur(4px);
+      filter: blur(4px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: scale(1);
+      transform: scale(1);
+    -webkit-transform-origin: 0% 0%;
+      transform-origin: 0% 0%;
+    -webkit-filter: blur(0px);
+      filter: blur(0px);
+    opacity: 1;
+  }
+}
+@keyframes puff-in-tl {
+  0% {
+    -webkit-transform: scale(2);
+      transform: scale(2);
+    -webkit-transform-origin: 0% 0%;
+      transform-origin: 0% 0%;
+    -webkit-filter: blur(4px);
+      filter: blur(4px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: scale(1);
+      transform: scale(1);
+    -webkit-transform-origin: 0% 0%;
+      transform-origin: 0% 0%;
+    -webkit-filter: blur(0px);
+      filter: blur(0px);
+    opacity: 1;
   }
 }
