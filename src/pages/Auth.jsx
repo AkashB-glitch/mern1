@@ -56,7 +56,7 @@ export default function Auth({ setCurrentPage, setIsAuthenticated, setCurrentUse
           <div className="text-center mb-10 animate-slide-in">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 dark:bg-slate-700/50 rounded-2xl mb-6 backdrop-blur-sm overflow-hidden">
               <img 
-                src="http://timetoplay.com/wp-content/uploads/2016/12/community.jpg" 
+                src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=300&fit=crop&crop=center" 
                 alt="CommunityHub Logo" 
                 className="w-full h-full object-cover rounded-2xl"
               />
