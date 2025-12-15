@@ -10,15 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
-build/
 *.local
-
-# Vite cache
-.vite/
-
-# Environment files
-.env
-.env.*.local
 
 # Editor directories and files
 .vscode/*
@@ -30,13 +22,3 @@ build/
 *.njsproj
 *.sln
 *.sw?
-Thumbs.db
-
-# Package locks
-package-lock.json
-pnpm-lock.yaml
-
-# Coverage and cache
-coverage/
-.cache/
-public/*.map
