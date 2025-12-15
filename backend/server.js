@@ -22,16 +22,23 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
-  "https://mern1-bvih-qzq6dcuqu-akashs-projects-e6e595b3.vercel.app",
-  "https://mern1-huts-pj0v70j8x-akashs-projects-e6e595b3.vercel.app",
   "https://mern1.vercel.app"
 ];
+
+// Function to check if origin is allowed
+const isOriginAllowed = (origin) => {
+  if (!origin) return true; // Allow requests with no origin (mobile apps, etc.)
+  if (allowedOrigins.includes(origin)) return true;
+  // Allow all Vercel preview deployments
+  if (origin.includes('akashs-projects-e6e595b3.vercel.app')) return true;
+  return false;
+};
 
 // CORS configuration
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (isOriginAllowed(origin)) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));

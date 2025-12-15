@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "env": {
+    "VITE_API_URL": "https://mern1-2-f700.onrender.com"
+  }
+}
