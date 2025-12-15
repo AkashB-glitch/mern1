@@ -22,8 +22,8 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
-  "https://mern1-11gq14nwe-akashs-projects-e6e595b3.vercel.app",
-  "https://mern1-bvih-qzq6dcuqu-akashs-projects-e6e595b3.vercel.app"
+  "https://mern1-bvih-qzq6dcuqu-akashs-projects-e6e595b3.vercel.app",
+  "https://mern1.vercel.app"
 ];
 
 // CORS configuration
@@ -76,7 +76,7 @@ app.use('*', (req, res) => {
 });
 
 // Port
-const PORT = process.env.PORT || 5002;
+const PORT = process.env.PORT || 5004;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
