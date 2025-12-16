@@ -23,7 +23,8 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
   "https://mern1.vercel.app",
-  "https://mern1-99yq.vercel.app"
+  "https://mern1-99yq.vercel.app",
+  "https://mern1project.vercel.app"
 ];
 
 // Function to check if origin is allowed
