@@ -97,7 +97,7 @@ export default function Header({ setCurrentPage, setSelectedPost, setCategoryFil
         >
           <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-lg overflow-hidden">
             <img 
-              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=300&fit=crop&crop=center" 
+              src="http://timetoplay.com/wp-content/uploads/2016/12/community.jpg" 
               alt="CommunityHub Logo" 
               className="w-full h-full object-cover"
             />

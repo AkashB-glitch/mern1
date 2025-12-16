@@ -22,24 +22,15 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
-  "https://mern1.vercel.app",
-  "https://mern1-99yq.vercel.app"
+  "https://mern1-bvih-qzq6dcuqu-akashs-projects-e6e595b3.vercel.app",
+  "https://mern1.vercel.app"
 ];
-
-// Function to check if origin is allowed
-const isOriginAllowed = (origin) => {
-  if (!origin) return true; // Allow requests with no origin (mobile apps, etc.)
-  if (allowedOrigins.includes(origin)) return true;
-  // Allow all Vercel preview deployments
-  if (origin.includes('akashs-projects-e6e595b3.vercel.app')) return true;
-  return false;
-};
 
 // CORS configuration
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (isOriginAllowed(origin)) {
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
@@ -79,9 +70,7 @@ app.use('*', (req, res) => {
       '/api/auth/signup',
       '/api/posts',
       '/api/users',
-      '/api/comments',
-      '/api/categories',
-      '/api/admin'
+      '/api/comments'
     ]
   });
 });
