@@ -24,30 +24,26 @@ const allowedOrigins = [
   "http://localhost:5174",
   "https://mern1.vercel.app",
   "https://mern1-99yq.vercel.app",
-  "https://mern1project.vercel.app"
+  "https://mern1project.vercel.app",
+  "https://mern1-h68q.vercel.app"
 ];
 
 // Function to check if origin is allowed
 const isOriginAllowed = (origin) => {
   if (!origin) return true; // Allow requests with no origin (mobile apps, etc.)
   if (allowedOrigins.includes(origin)) return true;
-  // Allow all Vercel preview deployments
-  if (origin.includes('akashs-projects-e6e595b3.vercel.app')) return true;
+  // Allow all Vercel deployments
+  if (origin && origin.includes('.vercel.app')) return true;
   return false;
 };
 
-// CORS configuration
+// CORS configuration - Allow all origins for now
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (isOriginAllowed(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
+    origin: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
 
@@ -88,7 +84,7 @@ app.use('*', (req, res) => {
 });
 
 // Port
-const PORT = process.env.PORT || 5005;
+const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
